@@ -1,0 +1,98 @@
+<div class="search-div">
+
+
+  <select (change)="show($event)">
+    <option value="BANGLORE">Banglore</option>
+    <option value="DELHI">Delhi</option>
+    <option value="MUMBAI">Mumbai</option>
+    <option value="KOLKATA">Kolkata</option>
+    <option value="CHENNAI">Chennai</option>
+
+  </select>
+
+
+  <mat-form-field class="search-form-field" floatLabel="never">
+    <input type="text" matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+</div>
+
+
+<div class="mat-elevation-z8" style="margin: 10px;">
+  <mat-table [dataSource]="listdata" matSort>
+
+    <ng-container matColumnDef="ifsc">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>IFSC</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.ifsc}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="branch">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Branch</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.branch}}</mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="city">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>City</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.city}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="district">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>District</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.district}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="bank_name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Bank Name</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.bank_name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="state">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>state</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.state}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="address" style="padding: 5px;">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.address}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="favourite">
+      <mat-header-cell *matHeaderCellDef>Favorite</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <button *ngIf="!element._fav" mat-icon-button (click)="onFav(element.ifsc)">
+          <mat-icon >favorite_border</mat-icon>
+        </button>
+        <button *ngIf="element._fav" mat-icon-button (click)="onFav(element.ifsc)">
+          <mat-icon >favorite</mat-icon>
+        </button>
+
+      </mat-cell>
+    </ng-container>
+
+  <!--  <ng-container matColumnDef="isFav">
+      <mat-header-cell *matHeaderCellDef>Is Favourite</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{element.getFavourite()}}</mat-cell>
+    </ng-container>
+-->
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        Loading.....
+      </mat-footer-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row;columns:displayedColumns;"></mat-row>
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listdata!=null}"></mat-footer-row>
+    "
+  </mat-table>
+  <mat-paginator [length]="100"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 showFirstLastButtons>
+  </mat-paginator>
+
+</div>
