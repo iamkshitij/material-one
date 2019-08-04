@@ -39,9 +39,6 @@ export class UsersListComponent implements OnInit {
       localStorage.setItem("Favorites","");
     }
 
-
-
-
     this.apiService.getUsers('BANGLORE').subscribe(
       res => {
         localStorage[CACHE_KEY] = JSON.stringify(res);
@@ -72,11 +69,23 @@ export class UsersListComponent implements OnInit {
   }
 
   show(event: any) {
+
+    if(localStorage.getItem('Favorites') == null) {
+      localStorage.setItem("Favorites","");
+    }
     this.city = event.target.value;
     this.apiService.getUsers(this.city).subscribe(
       res => {
         localStorage[CACHE_KEY] = JSON.stringify(res);
         this.users = res as User[];
+        this.users.forEach(
+          value => {
+            if (localStorage.getItem('Favorites').indexOf(value.ifsc) >-1)  {
+              value._fav = true;
+            }
+          }
+        );
+
         this.listdata = new MatTableDataSource(this.users);
         this.listdata.sort = this.sort;
         this.listdata.paginator = this.paginator;
