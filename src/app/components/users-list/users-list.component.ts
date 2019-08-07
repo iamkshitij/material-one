@@ -2,9 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ApiService} from '../../api.service';
 import {User} from 'src/app/user';
 import {FormControl, Validators} from '@angular/forms';
-import {FilterPipe} from '../../filter.pipe';
 import {MatTableDataSource, MatSort, MatPaginator} from '@angular/material';
-import {fakeAsync} from '@angular/core/testing';
+
 
 const CACHE_KEY = 'httpApiCache';
 
@@ -14,7 +13,7 @@ const CACHE_KEY = 'httpApiCache';
   styleUrls: ['./users-list.component.css']
 })
 export class UsersListComponent implements OnInit {
-  apiCache;
+  apiCache: string = 'api-cache';
   listdata: MatTableDataSource<any>;
   displayedColumns: string[] = ['ifsc', 'branch', 'city', 'district', 'state', 'bank_name', 'address', 'favourite'];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -35,31 +34,48 @@ export class UsersListComponent implements OnInit {
 
   ngOnInit() {
 
-    if(localStorage.getItem('Favorites') == null) {
-      localStorage.setItem("Favorites","");
+
+    if (localStorage.getItem('api-cache') == null) {
+      this.apiService.getUsers('BANGALORE').subscribe(
+        res => {
+
+          this.users = res as User[];
+
+          this.users.forEach(
+            value => {
+              if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+                value._fav = true;
+              }
+            }
+          );
+
+
+          this.listdata = new MatTableDataSource(this.users);
+          this.listdata.sort = this.sort;
+          this.listdata.paginator = this.paginator;
+          // storing data in local storage
+          localStorage.setItem(this.apiCache, JSON.stringify(this.users));
+        }
+      );
+    } else {
+      this.users = JSON.parse(localStorage.getItem(this.apiCache));
+      this.users.forEach(
+        value => {
+          if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+            value._fav = true;
+          }
+        }
+      );
+      this.listdata = new MatTableDataSource(this.users);
+      this.listdata.sort = this.sort;
+      this.listdata.paginator = this.paginator;
     }
 
-    this.apiService.getUsers('BANGLORE').subscribe(
-      res => {
-        localStorage[CACHE_KEY] = JSON.stringify(res);
 
-        this.users = res as User[];
+    if (localStorage.getItem('Favorites') == null) {
+      localStorage.setItem('Favorites', '');
+    }
 
-        this.users.forEach(
-          value => {
-            if (localStorage.getItem('Favorites').indexOf(value.ifsc) >-1)  {
-              value._fav = true;
-            }
-          }
-        );
-
-
-
-        this.listdata = new MatTableDataSource(this.users);
-        this.listdata.sort = this.sort;
-        this.listdata.paginator = this.paginator;
-      }
-    );
 
   }
 
@@ -70,27 +86,45 @@ export class UsersListComponent implements OnInit {
 
   show(event: any) {
 
-    if(localStorage.getItem('Favorites') == null) {
-      localStorage.setItem("Favorites","");
+    if (localStorage.getItem('Favorites') == null) {
+      localStorage.setItem('Favorites', '');
     }
     this.city = event.target.value;
-    this.apiService.getUsers(this.city).subscribe(
-      res => {
-        localStorage[CACHE_KEY] = JSON.stringify(res);
-        this.users = res as User[];
-        this.users.forEach(
-          value => {
-            if (localStorage.getItem('Favorites').indexOf(value.ifsc) >-1)  {
-              value._fav = true;
-            }
-          }
-        );
 
-        this.listdata = new MatTableDataSource(this.users);
-        this.listdata.sort = this.sort;
-        this.listdata.paginator = this.paginator;
-      }
-    );
+    if (localStorage.getItem('api-cache') == null) {
+      this.apiService.getUsers(this.city).subscribe(
+        res => {
+          localStorage[CACHE_KEY] = JSON.stringify(res);
+          this.users = res as User[];
+          this.users.forEach(
+            value => {
+              if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+                value._fav = true;
+              }
+            }
+          );
+
+          this.listdata = new MatTableDataSource(this.users);
+          this.listdata.sort = this.sort;
+          this.listdata.paginator = this.paginator;
+          localStorage.setItem(this.apiCache, JSON.stringify(this.users));
+        }
+      );
+    }else {
+      this.users = JSON.parse(localStorage.getItem(this.apiCache));
+      this.users.forEach(
+        value => {
+          if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+            value._fav = true;
+          }
+        }
+      );
+      this.listdata = new MatTableDataSource(this.users);
+      this.listdata.sort = this.sort;
+      this.listdata.paginator = this.paginator;
+    }
+
+
 
 
   }
@@ -106,18 +140,17 @@ export class UsersListComponent implements OnInit {
       value => {
         if (value.ifsc == id) {
           value._fav = !value._fav;
-          if(value._fav){
-            temp = temp +","+ value.ifsc;
-          }
-          else{
-            temp = temp.replace(value.ifsc,'');
+          if (value._fav) {
+            temp = temp + ',' + value.ifsc;
+          } else {
+            temp = temp.replace(value.ifsc, '');
           }
 
         }
       }
     );
     //console.log(temp);
-    localStorage.setItem('Favorites',temp);
+    localStorage.setItem('Favorites', temp);
   }
 
 }
