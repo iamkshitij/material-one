@@ -4,9 +4,6 @@ import {User} from 'src/app/user';
 import {FormControl, Validators} from '@angular/forms';
 import {MatTableDataSource, MatSort, MatPaginator} from '@angular/material';
 
-
-const CACHE_KEY = 'httpApiCache';
-
 @Component({
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
@@ -14,6 +11,9 @@ const CACHE_KEY = 'httpApiCache';
 })
 export class UsersListComponent implements OnInit {
   apiCache: string = 'api-cache';
+
+  apiCacheDelhi: string = 'api-cache-delhi';
+
   listdata: MatTableDataSource<any>;
   displayedColumns: string[] = ['ifsc', 'branch', 'city', 'district', 'state', 'bank_name', 'address', 'favourite'];
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -91,39 +91,80 @@ export class UsersListComponent implements OnInit {
     }
     this.city = event.target.value;
 
-    if (localStorage.getItem('api-cache') == null) {
-      this.apiService.getUsers(this.city).subscribe(
-        res => {
-          localStorage[CACHE_KEY] = JSON.stringify(res);
-          this.users = res as User[];
-          this.users.forEach(
-            value => {
-              if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
-                value._fav = true;
+    if(this.city == "DELHI"){
+      if (localStorage.getItem('api-cache-delhi') == null) {
+        this.apiService.getUsers(this.city).subscribe(
+          res => {
+
+            this.users = res as User[];
+            this.users.forEach(
+              value => {
+                if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+                  value._fav = true;
+                }
               }
-            }
-          );
+            );
 
-          this.listdata = new MatTableDataSource(this.users);
-          this.listdata.sort = this.sort;
-          this.listdata.paginator = this.paginator;
-          localStorage.setItem(this.apiCache, JSON.stringify(this.users));
-        }
-      );
-    }else {
-      this.users = JSON.parse(localStorage.getItem(this.apiCache));
-      this.users.forEach(
-        value => {
-          if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
-            value._fav = true;
+            this.listdata = new MatTableDataSource(this.users);
+            this.listdata.sort = this.sort;
+            this.listdata.paginator = this.paginator;
+            localStorage.setItem(this.apiCacheDelhi, JSON.stringify(this.users));
           }
-        }
-      );
-      this.listdata = new MatTableDataSource(this.users);
-      this.listdata.sort = this.sort;
-      this.listdata.paginator = this.paginator;
-    }
+        );
+      } else {
+        this.users = JSON.parse(localStorage.getItem(this.apiCacheDelhi));
+        this.users.forEach(
+          value => {
+            if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+              value._fav = true;
+            }
+          }
+        );
+        this.listdata = new MatTableDataSource(this.users);
+        this.listdata.sort = this.sort;
+        this.listdata.paginator = this.paginator;
+      }
+    }else if (this.city == "MUMBAI"){
 
+    }else if (this.city == "KOLKATA"){
+
+    }else if (this.city == "CHENNAI"){
+
+    }else{
+      if (localStorage.getItem('api-cache') == null) {
+        this.apiService.getUsers(this.city).subscribe(
+          res => {
+
+            this.users = res as User[];
+            this.users.forEach(
+              value => {
+                if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+                  value._fav = true;
+                }
+              }
+            );
+
+            this.listdata = new MatTableDataSource(this.users);
+            this.listdata.sort = this.sort;
+            this.listdata.paginator = this.paginator;
+            localStorage.setItem(this.apiCache, JSON.stringify(this.users));
+          }
+        );
+      } else {
+        this.users = JSON.parse(localStorage.getItem(this.apiCache));
+        this.users.forEach(
+          value => {
+            if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+              value._fav = true;
+            }
+          }
+        );
+        this.listdata = new MatTableDataSource(this.users);
+        this.listdata.sort = this.sort;
+        this.listdata.paginator = this.paginator;
+      }
+
+    }
 
 
 
