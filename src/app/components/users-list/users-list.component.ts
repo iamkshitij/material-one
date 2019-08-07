@@ -12,6 +12,9 @@ import {MatTableDataSource, MatSort, MatPaginator} from '@angular/material';
 export class UsersListComponent implements OnInit {
   apiCache: string = 'api-cache';
 
+  apiCacheMumbai: string = 'api-cache-mumbai';
+  apiCacheKolkata: string = 'api-cache-kolkata';
+  apiCacheChennai: string = 'api-cache-chennai';
   apiCacheDelhi: string = 'api-cache-delhi';
 
   listdata: MatTableDataSource<any>;
@@ -111,7 +114,8 @@ export class UsersListComponent implements OnInit {
             localStorage.setItem(this.apiCacheDelhi, JSON.stringify(this.users));
           }
         );
-      } else {
+      }
+      else {
         this.users = JSON.parse(localStorage.getItem(this.apiCacheDelhi));
         this.users.forEach(
           value => {
@@ -125,11 +129,107 @@ export class UsersListComponent implements OnInit {
         this.listdata.paginator = this.paginator;
       }
     }else if (this.city == "MUMBAI"){
+      if (localStorage.getItem('api-cache-mumbai') == null) {
+        this.apiService.getUsers(this.city).subscribe(
+          res => {
 
+            this.users = res as User[];
+            this.users.forEach(
+              value => {
+                if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+                  value._fav = true;
+                }
+              }
+            );
+
+            this.listdata = new MatTableDataSource(this.users);
+            this.listdata.sort = this.sort;
+            this.listdata.paginator = this.paginator;
+            localStorage.setItem(this.apiCacheMumbai, JSON.stringify(this.users));
+          }
+        );
+      }
+      else {
+        this.users = JSON.parse(localStorage.getItem(this.apiCacheMumbai));
+        this.users.forEach(
+          value => {
+            if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+              value._fav = true;
+            }
+          }
+        );
+        this.listdata = new MatTableDataSource(this.users);
+        this.listdata.sort = this.sort;
+        this.listdata.paginator = this.paginator;
+      }
     }else if (this.city == "KOLKATA"){
+      if (localStorage.getItem('api-cache-kolkata') == null) {
+        this.apiService.getUsers(this.city).subscribe(
+          res => {
 
+            this.users = res as User[];
+            this.users.forEach(
+              value => {
+                if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+                  value._fav = true;
+                }
+              }
+            );
+
+            this.listdata = new MatTableDataSource(this.users);
+            this.listdata.sort = this.sort;
+            this.listdata.paginator = this.paginator;
+            localStorage.setItem(this.apiCacheKolkata, JSON.stringify(this.users));
+          }
+        );
+      }
+      else {
+        this.users = JSON.parse(localStorage.getItem(this.apiCacheKolkata));
+        this.users.forEach(
+          value => {
+            if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+              value._fav = true;
+            }
+          }
+        );
+        this.listdata = new MatTableDataSource(this.users);
+        this.listdata.sort = this.sort;
+        this.listdata.paginator = this.paginator;
+      }
     }else if (this.city == "CHENNAI"){
+      if (localStorage.getItem('api-cache-chennai') == null) {
+        this.apiService.getUsers(this.city).subscribe(
+          res => {
 
+            this.users = res as User[];
+            this.users.forEach(
+              value => {
+                if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+                  value._fav = true;
+                }
+              }
+            );
+
+            this.listdata = new MatTableDataSource(this.users);
+            this.listdata.sort = this.sort;
+            this.listdata.paginator = this.paginator;
+            localStorage.setItem(this.apiCacheChennai, JSON.stringify(this.users));
+          }
+        );
+      }
+      else {
+        this.users = JSON.parse(localStorage.getItem(this.apiCacheChennai));
+        this.users.forEach(
+          value => {
+            if (localStorage.getItem('Favorites').indexOf(value.ifsc) > -1) {
+              value._fav = true;
+            }
+          }
+        );
+        this.listdata = new MatTableDataSource(this.users);
+        this.listdata.sort = this.sort;
+        this.listdata.paginator = this.paginator;
+      }
     }else{
       if (localStorage.getItem('api-cache') == null) {
         this.apiService.getUsers(this.city).subscribe(
