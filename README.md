@@ -6,7 +6,7 @@ This is front end appilcation created using Angular 8 and has following `feature
 <li>user should can search by text for the banks, across all the fields (Dynamic Inputs).</li>
 <li>pagination for the results of the search, the user should is able to select page size.</li>
 <li>favourites is in persist state event if the website is refreshed or reloaded.</li>
-<li>API calls is cached.</li>
+<li>API calls is cached on frontend.</li>
 
 </ul>
 
