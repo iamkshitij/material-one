@@ -14,4 +14,4 @@ Uses  [Angular Material](https://material.angular.io/) a `Material Design compon
 ## Hosting
 
 This project is hosted on heroku. 
-<br> Link of hosted url :  [Bank App](https://www.bank007herokuapp.com) 
+<br> Link of hosted url :  [Bank App](http://bank007.herokuapp.com/) 
