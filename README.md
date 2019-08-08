@@ -1,6 +1,6 @@
 # Banking App
 
-Has following `features` :
+This is front end appilcation created using Angular 8 and has following `features` :
 <ul>
 <li>Bank search screen shows a list of banks.</li>
 <li>user should can search by text for the banks, across all the fields (Dynamic Inputs).</li>
