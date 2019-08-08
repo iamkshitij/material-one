@@ -51,7 +51,7 @@
     </ng-container>
 
     <ng-container matColumnDef="state">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>state</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>State</mat-header-cell>
       <mat-cell *matCellDef="let element">{{element.state}}</mat-cell>
     </ng-container>
 
@@ -61,7 +61,7 @@
     </ng-container>
 
     <ng-container matColumnDef="favourite">
-      <mat-header-cell *matHeaderCellDef>Favorite</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Favorite</mat-header-cell>
       <mat-cell *matCellDef="let element">
         <button *ngIf="!element._fav" mat-icon-button (click)="onFav(element.ifsc)">
           <mat-icon >favorite_border</mat-icon>
